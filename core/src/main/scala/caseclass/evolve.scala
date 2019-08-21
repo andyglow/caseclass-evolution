@@ -1,8 +1,8 @@
 package caseclass
 
-
 import scala.reflect.macros.whitebox
 import scala.annotation._
+
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
 class evolve(
