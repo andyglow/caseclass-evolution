@@ -37,7 +37,7 @@ case class BankUser(
 With the library I wanted to introduce this boilerplate gets reduced.
 
 ```scala
-@Evolve(User)
+@evolve(User)
 case class BankUser(
   bank: String,
   bankAccount: String,
@@ -55,14 +55,22 @@ There also 2 extra features.
 - we can rename fields
 
 ```scala
-@Evolve(from = User, removed = Set("middleName"), renamed = Map("id" -> "userId"))
+@evolve(from = User, removed = Set("middleName"), renamed = Map("id" -> "userId"))
 case class UserV2()
 ``` 
 
 Even though it may look cool, there is a huge obstacle. 
 *IDE support is absent*. Code in IDE will be all highlighted and look ugly.
 
+### Apache Spark
+
+It can be used with Apache Spark to define schemas. `Dataset` API.
+
+Also with a little trick it might be used with `Frameless`. 
+In order to use it with `Frameless` one need to build model separately from code using it.
+Consider separate module or separate library. 
+
+
 TODO
 ----
 - same name, but type changed scenario
-- test with Apache Spark

@@ -40,7 +40,7 @@ lazy val commons = Seq(
         case other                  => other
       }
       case Some((2, n)) if n >= 13  => options.filterNot { opt =>
-        opt == "-Yno-adapted-args" || opt == "-Xfuture" || opt == "-language:experimental.macros"
+        opt == "-Yno-adapted-args" || opt == "-Xfuture"
       } :+ "-Xsource:2.13"
       case _             => options
     }
@@ -115,10 +115,7 @@ resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
 lazy val core = (project in file("core"))
   .settings(
     commons,
-    name := "caseclass-core",
-    scalacOptions ++= Seq(
-      "-encoding", "utf8",
-      "-language:experimental.macros"),
+    name := "caseclass-evolution",
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value))
 
