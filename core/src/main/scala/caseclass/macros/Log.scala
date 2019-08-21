@@ -4,7 +4,6 @@ import scala.reflect.macros.whitebox
 
 
 private[macros] class Log(c: whitebox.Context) {
-  import Log._
 
   def inf(x: String): Unit = {
     c.info(c.enclosingPosition, x, force = true)

@@ -7,7 +7,16 @@ import org.scalatest.Matchers._
 class EvolveSpec extends FunSuite {
 
   test("compiles. same file") {
-    """FirstCCSameFile(a = "a", b = "b")
+    // by name in order
+    """FirstCCSameFile(a = "a", b = 12)
+      |""".stripMargin should compile
+
+    // by name not in order
+    """FirstCCSameFile(b = 12, a = "a")
+      |""".stripMargin should compile
+
+    // argument order
+    """FirstCCSameFile("a", 12)
       |""".stripMargin should compile
   }
 
@@ -61,7 +70,7 @@ class EvolveSpec extends FunSuite {
     val f = ForthCC(a = "a", opt = Some("opt"), list = List(1, 2, 3))
     val r = f.withThirdCC(ThirdCC(a = "aa", o = None, l = Nil))
     r.a shouldBe "aa"
-    r.opt shouldBe 'empty
-    r.list shouldBe 'empty
+    r.opt shouldBe Symbol("empty")
+    r.list shouldBe Symbol("empty")
   }
 }

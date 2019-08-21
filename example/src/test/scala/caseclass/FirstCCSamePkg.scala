@@ -1,4 +1,4 @@
 package caseclass
 
-@Evolve(ZeroCC)
+@evolve(ZeroCC)
 case class FirstCCSamePkg(b: String)

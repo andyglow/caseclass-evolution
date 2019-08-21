@@ -1,27 +1,9 @@
 package caseclass.macros
 
 import scala.reflect.macros._
-import util._
-import Log._
+
 
 /** Case Class (taken from Type)
-  *
-  * @param sym
-  * @param fields
-  * @param parents
-  * @param body
-  * @param methods
-  */
-private[macros] case class CCFromType(
-  sym: Universe#ClassSymbol,
-  fields: Seq[Map[String, (Universe#Tree, Universe#Tree)]],
-  parents: Seq[String],
-  body: Seq[Universe#Tree],
-  methods: Seq[Universe#Tree] = Seq.empty
-)
-
-/** Case Class (taken from Tree)
-  * Is also used to generate a final code.
   *
   * @param name
   * @param fields
@@ -29,14 +11,15 @@ private[macros] case class CCFromType(
   * @param body
   * @param methods
   */
-private[macros] case class CCFromTree(
-  name: Universe#TypeName,
+private[macros] case class CC(
+  name: String,
+  sym: Universe#TypeSymbol,
   fields: Seq[Map[String, (Universe#Tree, Universe#Tree)]],
   parents: Seq[String],
   body: Seq[Universe#Tree],
   methods: Seq[Universe#Tree] = Seq.empty) {
 
-  def withFieldsAdded(c: whitebox.Context)(_fields: Seq[Map[String, (Universe#Tree, Universe#Tree)]])(implicit log: Log): CCFromTree = {
+  def withFieldsAdded(c: whitebox.Context)(_fields: Seq[Map[String, (Universe#Tree, Universe#Tree)]]): CC = {
     copy(fields = fields.zip(_fields) map { case (lList, rList) =>
       rList.foldLeft(lList) {
         case (agg, (n, (t, d))) =>
@@ -48,7 +31,7 @@ private[macros] case class CCFromTree(
     })
   }
 
-  def withFieldsRemoved(c: whitebox.Context)(names: Set[String])(implicit log: Log): CCFromTree = {
+  def withFieldsRemoved(c: whitebox.Context)(names: Set[String])(implicit log: Log): CC = {
     copy(fields = fields map { args =>
       val fieldsToRemove = args.keySet intersect names
       if (fieldsToRemove != names) {
@@ -60,11 +43,11 @@ private[macros] case class CCFromTree(
     })
   }
 
-  def withMethodsAdded(c: whitebox.Context)(tree: Universe#Tree)(implicit log: Log): CCFromTree = {
+  def withMethodsAdded(c: whitebox.Context)(tree: Universe#Tree): CC = {
     copy(methods = methods :+ tree)
   }
 
-  def withFieldsRenamed(c: whitebox.Context)(mapping: Map[String, String])(implicit log: Log): CCFromTree = {
+  def withFieldsRenamed(c: whitebox.Context)(mapping: Map[String, String])(implicit log: Log): CC = {
     copy(fields = fields map { args =>
       val names = mapping.keySet
       val fieldsToRemove = args.keySet intersect names
@@ -84,7 +67,7 @@ private[macros] case class CCFromTree(
   def gen(c: whitebox.Context): c.Tree = {
     import c.universe._
 
-    val lClassName  = name.asInstanceOf[TypeName]
+    val lClassName  = TypeName(name)
     val lBody       = body.asInstanceOf[Seq[Tree]]
     val lFields     = fields map { _.map { case (n, (t, d)) => ValDef(Modifiers(), TermName(n), t.asInstanceOf[Tree], d.asInstanceOf[Tree]) }.toSeq }
     val lParents    = parents map { _.asInstanceOf[Tree]}
@@ -105,10 +88,9 @@ private[macros] object CC {
     *
     * @param c
     * @param cd
-    * @param log
     * @return
     */
-  def fromType(c: whitebox.Context)(cd: c.universe.Type)(implicit log: Log): CCFromType = {
+  def fromType(c: whitebox.Context)(cd: c.universe.Type): CC = {
     import c.universe._
 
     val ccFields = cd.decls.collectFirst {
@@ -122,7 +104,8 @@ private[macros] object CC {
       }.toMap
     }
 
-    CCFromType(
+    CC(
+      cd.typeSymbol.asClass.name.decodedName.toString,
       cd.typeSymbol.asClass,
       fields,
       Seq.empty,
@@ -136,14 +119,16 @@ private[macros] object CC {
     * @param log
     * @return
     */
-  def fromTree(c: whitebox.Context)(cd: c.universe.ClassDef)(implicit log: Log): CCFromTree = {
+  def fromTree(c: whitebox.Context)(cd: c.universe.ClassDef)(implicit log: Log): CC = {
     import c.universe._
 
     cd match {
       case q"case class $className(...$fields) extends ..$parents { ..$body }" =>
         val name = className.asInstanceOf[TypeName]
-        CCFromTree(
-          name,
+
+        CC(
+          name.decodedName.toString,
+          c.internal.newFreeType(name.decodedName.toString),
           fields map {
             case argList: List[_] =>
               argList.map {

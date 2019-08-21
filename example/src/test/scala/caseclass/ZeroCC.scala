@@ -2,8 +2,8 @@ package caseclass
 
 case class ZeroCC(a: String)
 
-@Evolve(ZeroCC)
-case class FirstCCSameFile(b: String)
+@evolve(ZeroCC)
+case class FirstCCSameFile(b: Int)
 
-@Evolve(from = ZeroCC)
+@evolve(from = ZeroCC)
 case class FirstCCSameFileNamed(b: String)

@@ -1,4 +1,4 @@
 package caseclass
 
-@Evolve(SecondCC, removed = Set("m"))
+@evolve(SecondCC, removed = Set("m"))
 case class ThirdCC()

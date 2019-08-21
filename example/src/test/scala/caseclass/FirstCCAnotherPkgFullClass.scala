@@ -1,4 +1,4 @@
 package caseclass
 
-@Evolve(caseclass.anotherPackage.YaZeroCC)
+@evolve(caseclass.anotherPackage.YaZeroCC)
 case class FirstCCAnotherPkgFullClass(b: String)

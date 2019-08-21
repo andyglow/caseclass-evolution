@@ -1,6 +1,5 @@
 package caseclass.macros
 
-import scala.language.experimental.macros
 import scala.reflect.macros._
 
 
@@ -10,7 +9,7 @@ object EvolveMacro {
     import c.universe._
     implicit val log: Log = Log(c)
 
-    def rewriteCC(x: ClassDef)(fn: CCFromTree => CCFromTree): Expr[Any] = {
+    def rewriteCC(x: ClassDef)(fn: CC => CC): Expr[Any] = {
       val s = CC.fromTree(c)(x)
       val res = fn(s).gen(c)
 
@@ -30,7 +29,7 @@ object EvolveMacro {
         CC.fromType(c)(classType)
       }
 
-      val withSuperMethodName = TermName("with" + superCC.sym.name.decodedName.toString)
+      val withSuperMethodName = TermName("with" + superCC.name)
 
       rewriteCC(cd) { cc =>
 
@@ -50,11 +49,12 @@ object EvolveMacro {
               q"${TermName(r)} = x.${TermName(l)}"
             }
 
-          q"def ${withSuperMethodName}(x: ${superCC.sym.asInstanceOf[ClassSymbol]}): ${cc.name.asInstanceOf[TypeName]} = this.copy(..$mapping)"
+          q"def ${withSuperMethodName}(x: ${superCC.sym.asInstanceOf[ClassSymbol]}): ${TypeName(cc.name)} = this.copy(..$mapping)"
         }
 
-        val ccc = cc
-          .withFieldsAdded(c)(superCC.fields)
+        val ccc = superCC
+          .copy(name = cc.name, sym = cc.sym)
+          .withFieldsAdded(c)(cc.fields)
           .withFieldsRemoved(c)(anno.remove)
           .withFieldsRenamed(c)(anno.rename)
           .withMethodsAdded(c)(withSuperMethod)

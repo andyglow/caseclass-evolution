@@ -2,5 +2,5 @@ package caseclass
 
 import caseclass.anotherPackage._
 
-@Evolve(YaZeroCC)
+@evolve(YaZeroCC)
 case class FirstCCAnotherPkgImport(b: String)
