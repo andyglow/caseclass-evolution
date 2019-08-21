@@ -14,9 +14,9 @@ lazy val commons = Seq(
 
   organizationName := "andyglow",
 
-  scalaVersion := "2.12.8",
+  scalaVersion := "2.13.0",
 
-  crossScalaVersions := Seq("2.11.12", "2.12.8"),
+  crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.0"),
 
   scalacOptions ++= {
     val options = Seq(
@@ -29,7 +29,8 @@ lazy val commons = Seq(
       "-Yno-adapted-args",
       "-Ywarn-dead-code",
       "-Ywarn-numeric-widen",
-      "-Xfuture")
+      "-Xfuture",
+      "-language:experimental.macros")
 
     // WORKAROUND https://github.com/scala/scala/pull/5402
     CrossVersion.partialVersion(scalaVersion.value) match {
@@ -39,7 +40,7 @@ lazy val commons = Seq(
         case other                  => other
       }
       case Some((2, n)) if n >= 13  => options.filterNot { opt =>
-        opt == "-Yno-adapted-args" || opt == "-Xfuture"
+        opt == "-Yno-adapted-args" || opt == "-Xfuture" || opt == "-language:experimental.macros"
       } :+ "-Xsource:2.13"
       case _             => options
     }
@@ -92,7 +93,19 @@ lazy val commons = Seq(
     ReleaseStep(action = Command.process("sonatypeReleaseAll", _), enableCrossBuild = true),
     pushChanges),
 
-  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full),
+  Compile / scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, n)) if n >= 13 => "-Ymacro-annotations" :: Nil
+      case _                       => Nil
+    }
+  },
+
+  libraryDependencies ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, n)) if n >= 13 => Nil
+      case _                       => compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full) :: Nil
+    }
+  },
 
   libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test
 )
