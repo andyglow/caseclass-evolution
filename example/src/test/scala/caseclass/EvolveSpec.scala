@@ -1,10 +1,12 @@
 package caseclass
 
 import org.scalatest._
-import org.scalatest.Matchers._
+import matchers.should.Matchers._
+import org.scalatest.matchers
+import org.scalatest.funsuite.AnyFunSuite
 
 
-class EvolveSpec extends FunSuite {
+class EvolveSpec extends AnyFunSuite {
 
   test("compiles. same file") {
     // by name in order
