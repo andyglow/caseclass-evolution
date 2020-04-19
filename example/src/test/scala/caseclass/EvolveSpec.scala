@@ -1,8 +1,6 @@
 package caseclass
 
-import org.scalatest._
-import matchers.should.Matchers._
-import org.scalatest.matchers
+import org.scalatest.matchers.should.Matchers._
 import org.scalatest.funsuite.AnyFunSuite
 
 
