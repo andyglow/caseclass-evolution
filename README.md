@@ -1,8 +1,8 @@
 Scala Case Class Evolution
 --------------------------
 
-[![Build Status](https://travis-ci.org/andyglow/caseclass-evolution.svg?branch=master)](https://travis-ci.org/andyglow/caseclass-evolution)
-[![Coverage Status](https://coveralls.io/repos/github/andyglow/caseclass-evolution/badge.svg?branch=master)](https://coveralls.io/github/andyglow/caseclass-evolution?branch=master)
+[![Build Status](https://cloud.drone.io/api/badges/andyglow/caseclass-evolution/status.svg)](https://cloud.drone.io/andyglow/caseclass-evolution)
+[![codecov](https://codecov.io/gh/andyglow/caseclass-evolution/branch/master/graph/badge.svg)](https://codecov.io/gh/andyglow/caseclass-evolution)
 
 EXPERIMENTAL
 ============
