@@ -107,7 +107,7 @@ lazy val commons = Seq(
     }
   },
 
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.3" % Test
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.4" % Test
 )
 
 resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
