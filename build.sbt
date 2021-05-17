@@ -14,9 +14,9 @@ lazy val commons = Seq(
 
   organizationName := "andyglow",
 
-  scalaVersion := "2.13.2",
+  scalaVersion := "2.13.6",
 
-  crossScalaVersions := Seq("2.11.12", "2.12.13", "2.13.2"),
+  crossScalaVersions := Seq("2.11.12", "2.12.10", "2.13.6"),
 
   scalacOptions ++= {
     val options = Seq(
@@ -107,7 +107,7 @@ lazy val commons = Seq(
     }
   },
 
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.3" % Test
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9" % Test
 )
 
 resolvers ++= Seq("snapshots", "releases").map(Resolver.sonatypeRepo)
