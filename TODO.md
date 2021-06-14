@@ -1,0 +1,11 @@
+- [ ] implement as dep-free compiler plugin
+  - start with scala 2.x
+  - then move on to scala 3.x
+- [ ] maybe create separate plugins for
+  - [ ] sbt
+  - [ ] gradle  
+- [ ] provide examples for 
+  - [ ] sbt
+  - [ ] gradle
+  - [ ] maven
+- [ ] try making scala-idea-plugin to support it nicely    
